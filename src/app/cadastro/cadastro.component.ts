@@ -27,10 +27,8 @@ export class CadastroComponent {
 
   cliente: Cliente = Cliente.newCliente();
 
-  constructor(private service: ClienteService){ // parecido com o autowired do Spring
-
-  }
-
+  constructor(private service: ClienteService){ }// parecido com o autowired do Spring
+  
   salvar(){
     this.service.salvar(this.cliente);
   }
