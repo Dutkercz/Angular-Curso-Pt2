@@ -32,8 +32,13 @@ export class ClienteService {
     que é um objeto JS em texto puro*/
   }
 
-  pesquisarClientes(nome : string) : Cliente [] /* << retorno*/{
-    return this.obterStorage();
+  pesquisarClientes(nomeBusca : string) : Cliente [] /* << retorno*/{
+    const clientes = this.obterStorage();
+    if(!nomeBusca){
+      return clientes;
+    }
+
+    return clientes.filter(x => x.nome?.indexOf(nomeBusca));
   }
 
   private obterStorage() : Cliente[]{
