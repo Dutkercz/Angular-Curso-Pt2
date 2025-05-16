@@ -22,10 +22,7 @@ export class ClienteService {
       console.log("Existem dados incompletos");
       return;
     }
-    
-
-
-    localStorage.setItem(ClienteService.REPO_CLIENTES, JSON.stringify(storage))
+    localStorage.setItem(ClienteService.REPO_CLIENTES, JSON.stringify(storage));
     /*por ultimo guarda a lista novamente, mas agora com o novo cliente, 
     usando a etiqueta (chave), REPO_CLIENTES, que é na verdade _CLIENTES
     como o localStorage só aceita texto, ele usa o JSON.stringfy() para transformar um array de clientes
@@ -38,7 +35,7 @@ export class ClienteService {
       return clientes;
     }
 
-    return clientes.filter(x => x.nome?.indexOf(nomeBusca));
+    return clientes.filter(x => x.nome?.includes(nomeBusca));
   }
 
   private obterStorage() : Cliente[]{
@@ -46,14 +43,39 @@ export class ClienteService {
     if(repositorioClientes){
       //quando já houver dados no localStorage, iremos retornar um array com as informações do Storage
       const clientes : Cliente [] = JSON.parse(repositorioClientes);
-      return clientes
+      return clientes;
     }
-
-      // No primeira vez que o metodo for chamado, 
+     // No primeira vez que o metodo for chamado, 
       // iremos passar direto para essa parte do codigo, 
       // e retornaremos um array de storage vazio.
     const clientes : Cliente [] = [];
-    localStorage.setItem(ClienteService.REPO_CLIENTES, JSON.stringify(clientes))
-    return clientes
+    localStorage.setItem(ClienteService.REPO_CLIENTES, JSON.stringify(clientes));
+    return clientes;
   }
+
+  buscarClientePorId(id : string) : Cliente | undefined {//é possivel declarar 2 retornos -\0/
+    const clientes = this.obterStorage();
+    return clientes.find(x => x.id === id);
+  }
+
+  atualizar(cliente : Cliente){
+    const storage = this.obterStorage();
+    storage.forEach(x => {
+      if(x.id === cliente.id){
+        Object.assign(x, cliente); //substitu a assinatura, troca o Objeto por outro que chegou no parametro
+      }
+      localStorage.setItem(ClienteService.REPO_CLIENTES, JSON.stringify(storage));
+
+    })
+  }
+
+  deletar(cliente : Cliente){
+    const storage = this.obterStorage();
+    const novaListaDeClientes = storage.filter( x => x.id !== cliente.id);
+
+    localStorage.setItem(ClienteService.REPO_CLIENTES, JSON.stringify(novaListaDeClientes));
+
+  }
+
+
 }
